@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { ShieldCheckIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000');
 
 interface RiskRule {
   id: string;

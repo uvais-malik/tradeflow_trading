@@ -35,7 +35,7 @@ export default function ReplayEngine() {
   });
 
   useEffect(() => {
-    const s = io('http://localhost:3000/replay');
+    const s = io('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/replay');
     setSocket(s);
 
     s.on('replay:trade', (trade: Trade) => {

@@ -29,7 +29,7 @@ export default function Markets() {
   });
 
   useEffect(() => {
-    const socket = io('http://localhost:3000/live');
+    const socket = io('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live');
     socket.on('price:update', (data: { symbol: string, price: number }) => {
       setLivePrices(prev => ({ ...prev, [data.symbol]: data.price }));
     });

@@ -154,7 +154,7 @@ export function QuickActions() {
   
   const handleGenerateReport = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/orders/executions/csv', {
+      const res = await axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/orders/executions/csv', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       const blob = new Blob([res.data], { type: 'text/csv' });
@@ -255,7 +255,7 @@ export function NewsWidget() {
   const { data: news = [] } = useQuery<{id: number, headline: string; source: string, datetime: number, url?: string, image?: string, summary?: string}[]>({
     queryKey: ['news'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/markets/news', {
+      const res = await axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets/news', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       return res.data;
@@ -302,7 +302,7 @@ export function CalendarWidget() {
   const { data: events = [] } = useQuery<{event: string; type: string}[]>({
     queryKey: ['calendar'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/markets/calendar', {
+      const res = await axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets/calendar', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       return res.data;
@@ -347,7 +347,7 @@ export function AiInsights() {
   const { data: insights = [] } = useQuery<{type: string; title: string; description: string}[]>({
     queryKey: ['insights'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:3000/portfolio/insights', {
+      const res = await axios.get('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/portfolio/insights', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       return res.data;

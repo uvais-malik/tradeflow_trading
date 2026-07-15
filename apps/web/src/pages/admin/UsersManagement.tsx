@@ -19,7 +19,7 @@ export default function UsersManagement() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/users', {
+      const res = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -38,7 +38,7 @@ export default function UsersManagement() {
 
   const updateRole = async (userId: string, newRole: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/users/${userId}/role`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users/${userId}/role`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function UsersManagement() {
 
   const updateStatus = async (userId: string, isActive: boolean) => {
     try {
-      const res = await fetch(`http://localhost:3000/users/${userId}/status`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

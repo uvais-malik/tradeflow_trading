@@ -9,7 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000');
 
 interface FirmSummary {
   totalFirmCash: number;
