@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { api } from '../../lib/api';
 import { useNavigate } from 'react-router-dom';
 import { 
   CheckCircleIcon, ExclamationTriangleIcon, ClockIcon, ArrowTrendingUpIcon, 
@@ -154,9 +154,7 @@ export function QuickActions() {
   
   const handleGenerateReport = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/orders/executions/csv`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await api.get(`/orders/executions/csv`);
       const blob = new Blob([res.data], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -255,9 +253,7 @@ export function NewsWidget() {
   const { data: news = [] } = useQuery<{id: number, headline: string; source: string, datetime: number, url?: string, image?: string, summary?: string}[]>({
     queryKey: ['news'],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets/news`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await api.get(`/markets/news`);
       return res.data;
     }
   });
@@ -302,9 +298,7 @@ export function CalendarWidget() {
   const { data: events = [] } = useQuery<{event: string; type: string}[]>({
     queryKey: ['calendar'],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets/calendar`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await api.get(`/markets/calendar`);
       return res.data;
     }
   });
@@ -347,9 +341,7 @@ export function AiInsights() {
   const { data: insights = [] } = useQuery<{type: string; title: string; description: string}[]>({
     queryKey: ['insights'],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/portfolio/insights`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
+      const res = await api.get(`/portfolio/insights`);
       return res.data;
     }
   });
