@@ -35,7 +35,7 @@ function GlobalNotificationListener() {
 
   useEffect(() => {
     if (!token || !user) return;
-    const socket = io('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live');
+    const socket = io(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live`);
     
     socket.on('notification:new', (data) => {
       if (data.userId === user.userId) {

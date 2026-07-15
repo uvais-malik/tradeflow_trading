@@ -23,7 +23,7 @@ export default function AuditLogsView() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const res = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/audit', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/audit`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {

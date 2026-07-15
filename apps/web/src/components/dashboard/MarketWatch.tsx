@@ -10,7 +10,7 @@ export function MarketWatch() {
   useEffect(() => {
     api.get('/markets').then(res => setStocks(res.data));
     
-    const socket = io('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live', {
+    const socket = io(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live`, {
       auth: { token }
     });
 

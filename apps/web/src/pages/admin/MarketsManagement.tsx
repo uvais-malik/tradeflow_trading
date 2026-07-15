@@ -17,7 +17,7 @@ export default function MarketsManagement() {
 
   const fetchMarkets = async () => {
     try {
-      const res = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -61,7 +61,7 @@ export default function MarketsManagement() {
     };
 
     try {
-      const res = await fetch('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/markets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

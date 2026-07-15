@@ -24,7 +24,7 @@ export default function OrderBook({ stockId, symbol }: OrderBookProps) {
     // we'll rely on the websocket stream to populate it when an order is placed.
     setDepth({ bids: [], asks: [] });
     
-    const socket = io('${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live');
+    const socket = io(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/live`);
     
     socket.on('orderbook:update', (data: { stockId: string, depth: Depth }) => {
       if (data.stockId === stockId) {
