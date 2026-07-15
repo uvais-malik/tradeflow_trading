@@ -22,7 +22,7 @@ export function MarketWatch() {
   }, [token]);
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Live Market Watch</h3>
       <div className="flex-1 overflow-auto">
         <table className="w-full text-sm text-left">

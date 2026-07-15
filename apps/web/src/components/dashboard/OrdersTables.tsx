@@ -11,7 +11,7 @@ export function OpenOrders() {
   const openOrders = orders.filter((o: any) => ['OPEN', 'PARTIALLY_FILLED'].includes(o.status));
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Open Orders</h3>
       <div className="flex-1 overflow-auto">
         <table className="w-full text-sm text-left">
@@ -53,7 +53,7 @@ export function RecentTrades() {
   });
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Recent Trades</h3>
       <div className="flex-1 overflow-auto">
         <table className="w-full text-sm text-left">

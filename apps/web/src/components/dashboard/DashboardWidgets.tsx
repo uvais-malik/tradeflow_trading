@@ -19,7 +19,7 @@ export function MarketOverview() {
   ];
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 flex flex-wrap gap-4 items-center justify-between h-full">
+    <div className="glass-card p-5 flex flex-wrap gap-4 items-center justify-between h-full">
       {indices.map(idx => (
         <div key={idx.name} className="flex flex-col">
           <span className="text-xs font-semibold text-slate-400">{idx.name}</span>
@@ -38,7 +38,7 @@ export function Watchlist() {
     { name: 'Reliance', price: '₹2900', change: '+1%', color: 'text-green-400' },
   ];
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Watchlist</h3>
       <div className="space-y-3 flex-1 overflow-y-auto">
         {list.map((item, i) => (
@@ -58,7 +58,7 @@ export function Watchlist() {
 // 10. Risk Summary
 export function RiskSummary() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full">
+    <div className="glass-card p-5 h-full">
       <div className="flex items-center gap-2 mb-4">
         <ShieldExclamationIcon className="w-5 h-5 text-amber-400" />
         <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Risk Summary</h3>
@@ -92,7 +92,7 @@ export function RiskSummary() {
 // 11. Notifications
 export function NotificationsWidget() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full relative">
+    <div className="glass-card p-5 h-full relative">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
           <BellIcon className="w-4 h-4" /> Notifications
@@ -122,7 +122,7 @@ export function NotificationsWidget() {
 // 12. System Status
 export function SystemStatus() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full">
+    <div className="glass-card p-5 h-full">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
         <GlobeAltIcon className="w-4 h-4" /> System Status
       </h3>
@@ -169,7 +169,7 @@ export function QuickActions() {
   };
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full">
+    <div className="glass-card p-5 h-full">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Quick Actions</h3>
       <div className="grid grid-cols-2 gap-2">
         <button onClick={() => navigate('/markets')} className="bg-green-600/20 text-green-400 hover:bg-green-600/30 px-3 py-2 rounded text-xs font-bold border border-green-500/20 transition-colors">Buy</button>
@@ -207,7 +207,7 @@ export function ActivityTimeline() {
     { time: '10:32', text: 'Portfolio Updated' },
   ];
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Activity Timeline</h3>
       <div className="relative border-l border-slate-700 ml-2 space-y-4 flex-1 overflow-y-auto">
         {steps.map((step, i) => (
@@ -225,7 +225,7 @@ export function ActivityTimeline() {
 // 16. Mini Analytics
 export function MiniAnalytics() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col justify-between">
+    <div className="glass-card p-5 h-full flex flex-col justify-between">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Mini Analytics</h3>
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -259,7 +259,7 @@ export function NewsWidget() {
   });
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex-shrink-0">Market News</h3>
       <ul className="space-y-4 overflow-y-auto flex-1 pr-2">
         {news.map((n, i) => (
@@ -304,7 +304,7 @@ export function CalendarWidget() {
   });
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2 flex-shrink-0">
         <CalendarDaysIcon className="w-4 h-4" /> Calendar
       </h3>
@@ -325,7 +325,7 @@ export function CalendarWidget() {
 // 19. Price Alerts
 export function PriceAlerts() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex-shrink-0">Price Alerts</h3>
       <div className="space-y-2 text-sm font-mono flex-1 overflow-y-auto pr-2">
         <div className="flex items-center gap-2 text-slate-300"><span className="text-blue-400 font-bold">AAPL</span> {'>'} ₹190</div>

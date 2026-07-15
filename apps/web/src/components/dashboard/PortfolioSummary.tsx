@@ -12,7 +12,7 @@ export function PortfolioSummary({ summary, user }: PortfolioSummaryProps) {
   const pnl = summary?.totalUnrealizedPnL || 0;
   
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col justify-between overflow-y-auto">
+    <div className="glass-card p-5 h-full flex flex-col justify-between overflow-y-auto">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Portfolio Summary</h3>
       
       <div className="grid grid-cols-2 gap-y-2 gap-x-2">

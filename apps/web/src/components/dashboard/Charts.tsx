@@ -11,7 +11,7 @@ export function PortfolioAllocation() {
   ];
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Portfolio Allocation</h3>
       <div className="flex-1 flex items-center justify-between">
         <div className="w-1/2 h-full min-h-[150px]">
@@ -64,7 +64,7 @@ export function PnLTrend() {
   ];
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+    <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Profit/Loss Graph</h3>
       <div className="flex-1 min-h-[150px]">
         <ResponsiveContainer width="100%" height="100%">
