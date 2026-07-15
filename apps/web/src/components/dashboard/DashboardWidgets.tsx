@@ -304,11 +304,11 @@ export function CalendarWidget() {
   });
 
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full">
-      <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+      <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2 flex-shrink-0">
         <CalendarDaysIcon className="w-4 h-4" /> Calendar
       </h3>
-      <div className="space-y-2 text-sm text-slate-300">
+      <div className="space-y-2 text-sm text-slate-300 flex-1 overflow-y-auto pr-2">
         {events.map((e, i) => (
           <div key={i} className="flex justify-between">
             <span className={e.type === 'IPO' ? 'text-blue-400' : e.type === 'Earnings' ? 'text-purple-400' : e.type === 'Dividend' ? 'text-emerald-400' : 'text-rose-400'}>
@@ -325,9 +325,9 @@ export function CalendarWidget() {
 // 19. Price Alerts
 export function PriceAlerts() {
   return (
-    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full">
-      <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Price Alerts</h3>
-      <div className="space-y-2 text-sm font-mono">
+    <div className="bg-slate-800/60 backdrop-blur-md rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
+      <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex-shrink-0">Price Alerts</h3>
+      <div className="space-y-2 text-sm font-mono flex-1 overflow-y-auto pr-2">
         <div className="flex items-center gap-2 text-slate-300"><span className="text-blue-400 font-bold">AAPL</span> {'>'} ₹190</div>
         <div className="flex items-center gap-2 text-slate-300"><span className="text-rose-400 font-bold">TSLA</span> {'<'} ₹240</div>
         <div className="flex items-center gap-2 text-slate-300"><span className="text-emerald-400 font-bold">RELIANCE</span> {'>'} ₹3000</div>
@@ -347,12 +347,12 @@ export function AiInsights() {
   });
 
   return (
-    <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 backdrop-blur-md rounded-xl p-4 border border-indigo-500/30 h-full relative overflow-hidden group">
-      <div className="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/20 blur-2xl rounded-full group-hover:bg-indigo-500/30 transition-all" />
-      <h3 className="text-sm font-bold text-indigo-300 uppercase tracking-wider mb-3 flex items-center gap-2 relative z-10">
+    <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 backdrop-blur-md rounded-xl p-4 border border-indigo-500/30 h-full relative overflow-hidden group flex flex-col">
+      <div className="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/20 blur-2xl rounded-full group-hover:bg-indigo-500/30 transition-all pointer-events-none" />
+      <h3 className="text-sm font-bold text-indigo-300 uppercase tracking-wider mb-3 flex items-center gap-2 relative z-10 flex-shrink-0">
         <LightBulbIcon className="w-4 h-4" /> AI Insights
       </h3>
-      <div className="space-y-3 text-sm text-slate-200 relative z-10">
+      <div className="space-y-3 text-sm text-slate-200 relative z-10 flex-1 overflow-y-auto pr-2">
         {insights.map((insight, i) => (
           <p key={i}>
             <span className={`font-semibold ${insight.type === 'warning' ? 'text-amber-400' : 'text-emerald-400'}`}>{insight.title}: </span><br/>

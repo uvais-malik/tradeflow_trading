@@ -122,30 +122,30 @@ export default function Dashboard() {
           </div>
 
           {/* ROW 6: Watchlist (col 1-3), Risk Summary (col 4-6), Activity Timeline (col 7-9), Mini Analytics (col 10-12) */}
-          <div className="md:col-span-3 min-h-[18rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <Watchlist />
           </div>
-          <div className="md:col-span-3 min-h-[18rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <RiskSummary />
           </div>
-          <div className="md:col-span-3 min-h-[18rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <ActivityTimeline />
           </div>
-          <div className="md:col-span-3 min-h-[18rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <MiniAnalytics />
           </div>
 
           {/* ROW 7: Extra Optional Widgets */}
-          <div className="md:col-span-3 min-h-[12rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <NewsWidget />
           </div>
-          <div className="md:col-span-3 min-h-[12rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <CalendarWidget />
           </div>
-          <div className="md:col-span-3 min-h-[12rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <PriceAlerts />
           </div>
-          <div className="md:col-span-3 min-h-[12rem] h-full">
+          <div className="md:col-span-3 h-[20rem]">
             <AiInsights />
           </div>
 
