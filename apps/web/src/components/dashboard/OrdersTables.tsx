@@ -3,12 +3,20 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 
 export function OpenOrders() {
-  const { data: orders = [] } = useQuery({
+  const { data: apiOrders } = useQuery({
     queryKey: ['orders', 'open'],
     queryFn: async () => (await api.get('/orders')).data
   });
 
-  const openOrders = orders.filter((o: any) => ['OPEN', 'PARTIALLY_FILLED'].includes(o.status));
+  const mockOpenOrders = [
+    { id: '1', stock: { symbol: 'AAPL' }, side: 'BUY', quantity: 100, filledQuantity: 0, price: 175.50, status: 'OPEN' },
+    { id: '2', stock: { symbol: 'TSLA' }, side: 'SELL', quantity: 50, filledQuantity: 20, price: 260.00, status: 'PARTIALLY_FILLED' },
+    { id: '3', stock: { symbol: 'RELIANCE' }, side: 'BUY', quantity: 200, filledQuantity: 0, price: 2850.00, status: 'OPEN' },
+    { id: '4', stock: { symbol: 'NVDA' }, side: 'SELL', quantity: 10, filledQuantity: 0, price: 450.00, status: 'OPEN' }
+  ];
+
+  const rawOrders = (apiOrders && apiOrders.length > 0) ? apiOrders : mockOpenOrders;
+  const openOrders = rawOrders.filter((o: any) => ['OPEN', 'PARTIALLY_FILLED'].includes(o.status));
 
   return (
     <div className="glass-card p-5 h-full flex flex-col">

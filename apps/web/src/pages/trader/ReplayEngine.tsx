@@ -82,18 +82,7 @@ export default function ReplayEngine() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8 font-sans">
       <div className="max-w-6xl mx-auto space-y-6">
-        <header className="flex justify-between items-center bg-gray-800 p-6 rounded shadow-xl border border-blue-500">
-          <div>
-            <h1 className="text-3xl font-bold text-blue-400">Time Machine (Replay Engine)</h1>
-            <p className="text-gray-400 text-sm mt-1">Reconstruct historical market states with microsecond precision.</p>
-          </div>
-          <div className="text-right">
-            <div className="text-sm text-gray-400">Virtual Time</div>
-            <div className="text-2xl font-mono text-green-400">
-              {virtualTime > 0 ? new Date(virtualTime).toLocaleString() : '00:00:00'}
-            </div>
-          </div>
-        </header>
+        <h2 className="text-xl font-bold mb-4">Time Machine (Replay Engine)</h2>
 
         <div className="bg-gray-800 p-6 rounded shadow-xl flex items-center space-x-6 border border-gray-700">
           <div className="flex-1">

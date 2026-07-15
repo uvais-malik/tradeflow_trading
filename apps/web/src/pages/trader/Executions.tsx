@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { useAuthStore } from '../../store/authStore';
-import { ArrowDownRight, ArrowUpRight, Activity } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Activity, FileText, Printer } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Trade {
   id: string;
@@ -26,9 +27,64 @@ export default function Executions() {
     }
   });
 
+  const handleExportDOC = () => {
+    if (!trades) return;
+    
+    let html = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Execution Report</title></head><body>";
+    html += "<h1>TradeFlow Execution History</h1>";
+    html += "<table border='1' cellpadding='5' cellspacing='0'><thead><tr>";
+    html += "<th>Time</th><th>Asset</th><th>Side</th><th>Price</th><th>Qty</th><th>Value</th><th>Status</th>";
+    html += "</tr></thead><tbody>";
+    
+    trades.forEach(trade => {
+      const isBuyer = trade.buyOrder?.userId === user?.userId;
+      const totalValue = Number(trade.price) * trade.quantity;
+      html += `<tr>`;
+      html += `<td>${new Date(trade.executedAt).toLocaleString()}</td>`;
+      html += `<td>${trade.stock.symbol}</td>`;
+      html += `<td>${isBuyer ? 'BOUGHT' : 'SOLD'}</td>`;
+      html += `<td>$${Number(trade.price).toFixed(2)}</td>`;
+      html += `<td>${trade.quantity}</td>`;
+      html += `<td>$${totalValue.toFixed(2)}</td>`;
+      html += `<td>${trade.isSettled ? 'Settled' : 'Pending'}</td>`;
+      html += `</tr>`;
+    });
+    
+    html += "</tbody></table></body></html>";
+    
+    const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `TradeFlow_Executions_${new Date().toISOString().split('T')[0]}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="min-h-screen bg-[#0B0F19] p-4 md:p-8 font-sans selection:bg-indigo-500/30">
       <div className="max-w-[1600px] mx-auto space-y-6">
+        
+        {/* Top Navigation Row */}
+        <div className="flex items-center justify-between print:hidden">
+          <Link to="/dashboard" className="text-sm font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700/50 transition-colors flex items-center gap-2">
+            ← Back to Dashboard
+          </Link>
+          <div className="flex items-center gap-3">
+             <button onClick={handleExportDOC} className="text-sm font-bold bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 border border-blue-500/30 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+              <FileText className="w-4 h-4" /> Export DOC
+            </button>
+            <button onClick={handlePrint} className="text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20">
+              <Printer className="w-4 h-4" /> Print / PDF
+            </button>
+          </div>
+        </div>
+
         {/* Header Section */}
         <header className="flex items-center justify-between bg-slate-800/40 backdrop-blur-xl px-6 py-4 rounded-xl border border-slate-700/50">
           <div className="flex items-center space-x-4">

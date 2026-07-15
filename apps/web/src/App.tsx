@@ -13,6 +13,7 @@ import UsersManagement from './pages/admin/UsersManagement';
 import MarketsManagement from './pages/admin/MarketsManagement';
 import AuditLogsView from './pages/admin/AuditLogsView';
 import AdminLayout from './components/layout/AdminLayout';
+import TraderLayout from './components/layout/TraderLayout';
 import ComplianceDashboard from './pages/compliance/ComplianceDashboard';
 import RiskDashboard from './pages/risk/RiskDashboard';
 import FirmDashboard from './pages/portfolio-manager/FirmDashboard';
@@ -60,13 +61,17 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/markets" element={<ProtectedRoute><Markets /></ProtectedRoute>} />
-          <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-          <Route path="/executions" element={<ProtectedRoute><Executions /></ProtectedRoute>} />
-          <Route path="/portfolio" element={<ProtectedRoute><Portfolio /></ProtectedRoute>} />
-          <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
-          <Route path="/replay" element={<ProtectedRoute><ReplayEngine /></ProtectedRoute>} />
+          <Route element={<TraderLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/markets" element={<Markets />} />
+            
+            <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+            <Route path="/executions" element={<ProtectedRoute><Executions /></ProtectedRoute>} />
+            <Route path="/portfolio" element={<ProtectedRoute><Portfolio /></ProtectedRoute>} />
+            <Route path="/wallet" element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+            <Route path="/replay" element={<ProtectedRoute><ReplayEngine /></ProtectedRoute>} />
+          </Route>
+          
           <Route path="/risk" element={<ProtectedRoute><RiskDashboard /></ProtectedRoute>} />
           <Route path="/compliance" element={<ProtectedRoute><ComplianceDashboard /></ProtectedRoute>} />
           <Route path="/firm-dashboard" element={<ProtectedRoute><FirmDashboard /></ProtectedRoute>} />

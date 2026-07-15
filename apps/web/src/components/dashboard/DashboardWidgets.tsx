@@ -250,13 +250,23 @@ export function MiniAnalytics() {
 }
 
 export function NewsWidget() {
-  const { data: news = [] } = useQuery<{id: number, headline: string; source: string, datetime: number, url?: string, image?: string, summary?: string}[]>({
+  const { data: apiNews } = useQuery<{id: number, headline: string; source: string, datetime: number, url?: string, image?: string, summary?: string}[]>({
     queryKey: ['news'],
     queryFn: async () => {
       const res = await api.get(`/markets/news`);
       return res.data;
     }
   });
+
+  const mockNews = [
+    { id: 1, headline: 'Options trading volumes surge as VIX hits 3-month high', source: 'Bloomberg', datetime: Date.now()/1000 - 3600 },
+    { id: 2, headline: 'Apple (AAPL) calls see heavy institutional buying ahead of earnings', source: 'Reuters', datetime: Date.now()/1000 - 7200 },
+    { id: 3, headline: 'Federal Reserve hints at potential rate cut in Q4', source: 'WSJ', datetime: Date.now()/1000 - 14400 },
+    { id: 4, headline: 'Tech sector options skew indicates bearish sentiment building', source: 'CNBC', datetime: Date.now()/1000 - 28800 },
+    { id: 5, headline: 'Zero-DTE options now account for 45% of SPX volume', source: 'Financial Times', datetime: Date.now()/1000 - 86400 }
+  ];
+
+  const news = (apiNews && apiNews.length > 0) ? apiNews : mockNews;
 
   return (
     <div className="glass-card p-5 h-full flex flex-col">
@@ -295,13 +305,24 @@ export function NewsWidget() {
 
 // 18. Calendar
 export function CalendarWidget() {
-  const { data: events = [] } = useQuery<{event: string; type: string}[]>({
+  const { data: apiEvents } = useQuery<{event: string; type: string}[]>({
     queryKey: ['calendar'],
     queryFn: async () => {
       const res = await api.get(`/markets/calendar`);
       return res.data;
     }
   });
+
+  const mockEvents = [
+    { type: 'Macro', event: 'US CPI Data Release (8:30 AM EST)' },
+    { type: 'Earnings', event: 'NVIDIA Corp (NVDA) Q3 Earnings' },
+    { type: 'Macro', event: 'Fed Chair Powell Speaks (2:00 PM EST)' },
+    { type: 'Dividend', event: 'Microsoft (MSFT) Ex-Dividend Date' },
+    { type: 'IPO', event: 'Stripe Inc Initial Public Offering' },
+    { type: 'Earnings', event: 'Tesla (TSLA) Q4 Earnings' },
+  ];
+
+  const events = (apiEvents && apiEvents.length > 0) ? apiEvents : mockEvents;
 
   return (
     <div className="glass-card p-5 h-full flex flex-col">

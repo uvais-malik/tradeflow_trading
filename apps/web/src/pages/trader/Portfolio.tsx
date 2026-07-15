@@ -36,16 +36,8 @@ export default function Portfolio() {
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28CFE', '#FE8C9D'];
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] p-8 font-sans selection:bg-indigo-500/30">
-      <div className="max-w-[1600px] mx-auto space-y-6">
-        <header className="flex justify-between items-center bg-slate-800/40 backdrop-blur-xl px-6 py-4 rounded-xl border border-slate-700/50">
-          <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight">
-            My Portfolio
-          </h1>
-          <Link to="/dashboard" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
-            Back to Dashboard
-          </Link>
-        </header>
+    <div className="max-w-[1600px] mx-auto space-y-6">
+        <h2 className="text-xl font-bold mb-4">My Portfolio</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-slate-800/60 backdrop-blur-md p-6 rounded-xl border border-slate-700/50 shadow-xl">
@@ -69,7 +61,7 @@ export default function Portfolio() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="col-span-2 bg-slate-800/60 backdrop-blur-md rounded-xl border border-slate-700/50 overflow-hidden shadow-xl flex flex-col">
+          <div className="col-span-2 glass-card p-5 overflow-hidden shadow-xl flex flex-col">
             <div className="p-4 border-b border-slate-700/50 bg-slate-800/50">
               <h2 className="text-sm font-bold text-slate-300 uppercase tracking-wider">Holdings</h2>
             </div>
@@ -111,7 +103,7 @@ export default function Portfolio() {
             )}
           </div>
           
-          <div className="bg-slate-800/60 backdrop-blur-md rounded-xl border border-slate-700/50 p-6 shadow-xl">
+          <div className="glass-card p-5 p-6 shadow-xl">
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Allocation</h2>
             {allocationData.length > 0 ? (
               <div className="h-64">
@@ -146,6 +138,5 @@ export default function Portfolio() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
