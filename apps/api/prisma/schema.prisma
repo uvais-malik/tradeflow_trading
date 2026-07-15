@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TRADER
+  PORTFOLIO_MANAGER
+  RISK_ANALYST
+  COMPLIANCE_OFFICER
+  AUDITOR
+  ADMIN
+}
+
+enum OrderSide {
+  BUY
+  SELL
+}
+
+enum OrderType {
+  MARKET
+  LIMIT
+  STOP_LOSS
+}
+
+enum OrderValidity {
+  DAY
+  IOC
+  GTC
+}
+
+enum OrderStatus {
+  CREATED
+  OPEN
+  PARTIALLY_FILLED
+  FILLED
+  CANCELLED
+  REJECTED
+  RISK_VALIDATION
+  RISK_FAILED
+  SETTLED
+  COMPLETED
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  fullName      String
+  role          Role     @default(TRADER)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  orders        Order[]
+  holdings      Holding[]
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  walletBalance Decimal  @default(0) @db.Decimal(18, 2)
+}
+
+model Stock {
+  id            String   @id @default(uuid())
+  symbol        String   @unique
+  name          String
+  currentPrice  Decimal  @db.Decimal(18, 4)
+  dayHigh       Decimal  @db.Decimal(18, 4)
+  dayLow        Decimal  @db.Decimal(18, 4)
+  isRestricted  Boolean  @default(false)
+  isTradingHalted Boolean @default(false)
+  orders        Order[]
+  holdings      Holding[]
+  trades        Trade[]
+  updatedAt     DateTime @updatedAt
+}
+
+model Order {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  stockId         String
+  stock           Stock         @relation(fields: [stockId], references: [id])
+  side            OrderSide
+  orderType       OrderType
+  validity        OrderValidity
+  quantity        Int
+  price           Decimal       @db.Decimal(18, 4)
+  filledQuantity  Int           @default(0)
+  status          OrderStatus   @default(CREATED)
+  rejectionReason String?
+  createdAt       DateTime      @default(now())
+  executedAt      DateTime?
+  ledgerEntries   LedgerEntry[]
+  buyTrades       Trade[]       @relation("BuyTrades")
+  sellTrades      Trade[]       @relation("SellTrades")
+}
+
+model Trade {
+  id          String   @id @default(uuid())
+  buyOrderId  String
+  buyOrder    Order    @relation("BuyTrades", fields: [buyOrderId], references: [id])
+  sellOrderId String
+  sellOrder   Order    @relation("SellTrades", fields: [sellOrderId], references: [id])
+  stockId     String
+  stock       Stock    @relation(fields: [stockId], references: [id])
+  price       Decimal  @db.Decimal(18, 4)
+  quantity    Int
+  executedAt  DateTime @default(now())
+  isSettled   Boolean  @default(false)
+  ledgerEntries LedgerEntry[]
+}
+
+model Holding {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  stockId       String
+  stock         Stock    @relation(fields: [stockId], references: [id])
+  quantity      Int
+  avgBuyPrice   Decimal  @db.Decimal(18, 4)
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, stockId])
+}
+
+model LedgerEntry {
+  id          String   @id @default(uuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  tradeId     String?
+  trade       Trade?   @relation(fields: [tradeId], references: [id])
+  account     String   // e.g. "CASH", "SECURITIES", "FEES"
+  debit       Decimal  @db.Decimal(18, 2) @default(0)
+  credit      Decimal  @db.Decimal(18, 2) @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([orderId])
+  @@index([tradeId])
+}
+
+model RiskRule {
+  id          String   @id @default(uuid())
+  name        String
+  ruleType    String   // MAX_DAILY_TRADE_VALUE | MAX_QUANTITY | MAX_EXPOSURE | RESTRICTED_STOCK
+  value       Decimal? @db.Decimal(18, 2)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // ORDER_EXECUTED | RISK_APPROVAL_NEEDED | ORDER_CANCELLED | ...
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id])
+  action     String   // e.g. "ORDER_CREATED", "USER_DISABLED"
+  entityType String
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+}
+
+
+
+
+
+
