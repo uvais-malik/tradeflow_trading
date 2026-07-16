@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../lib/api';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/authStore';
 import { 
   CheckCircleIcon, ExclamationTriangleIcon, ClockIcon, ArrowTrendingUpIcon, 
   ArrowTrendingDownIcon, BellIcon, BeakerIcon, LightBulbIcon, GlobeAltIcon,
@@ -250,12 +251,14 @@ export function MiniAnalytics() {
 }
 
 export function NewsWidget() {
+  const user = useAuthStore((state) => state.user);
   const { data: apiNews } = useQuery<{id: number, headline: string; source: string, datetime: number, url?: string, image?: string, summary?: string}[]>({
     queryKey: ['news'],
     queryFn: async () => {
       const res = await api.get(`/markets/news`);
       return res.data;
-    }
+    },
+    enabled: !!user
   });
 
   const mockNews = [
@@ -305,12 +308,14 @@ export function NewsWidget() {
 
 // 18. Calendar
 export function CalendarWidget() {
+  const user = useAuthStore((state) => state.user);
   const { data: apiEvents } = useQuery<{event: string; type: string}[]>({
     queryKey: ['calendar'],
     queryFn: async () => {
       const res = await api.get(`/markets/calendar`);
       return res.data;
-    }
+    },
+    enabled: !!user
   });
 
   const mockEvents = [
@@ -359,12 +364,14 @@ export function PriceAlerts() {
 
 // 20. AI Insights
 export function AiInsights() {
+  const user = useAuthStore((state) => state.user);
   const { data: insights = [] } = useQuery<{type: string; title: string; description: string}[]>({
     queryKey: ['insights'],
     queryFn: async () => {
       const res = await api.get(`/portfolio/insights`);
       return res.data;
-    }
+    },
+    enabled: !!user
   });
 
   return (
