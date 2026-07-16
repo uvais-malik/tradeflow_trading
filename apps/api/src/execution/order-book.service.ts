@@ -5,8 +5,8 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class OrderBookService implements OnModuleInit {
   private readonly logger = new Logger(OrderBookService.name);
-  // Map of stockId -> { bids: Order[], asks: Order[] }
-  private books: Map<string, { bids: Order[]; asks: Order[] }> = new Map();
+  // Map of stockId -> { bids: Order[], asks: Order[], stopBids: Order[], stopAsks: Order[] }
+  private books: Map<string, { bids: Order[]; asks: Order[]; stopBids: Order[]; stopAsks: Order[] }> = new Map();
 
   constructor(private prisma: PrismaService) {}
 
@@ -15,7 +15,7 @@ export class OrderBookService implements OnModuleInit {
     const activeOrders = await this.prisma.order.findMany({
       where: {
         status: { in: [OrderStatus.OPEN, OrderStatus.PARTIALLY_FILLED] },
-        orderType: OrderType.LIMIT,
+        orderType: { in: [OrderType.LIMIT, OrderType.STOP_LOSS] },
       },
       orderBy: { createdAt: 'asc' }
     });
@@ -23,12 +23,12 @@ export class OrderBookService implements OnModuleInit {
     for (const order of activeOrders) {
       this.addOrder(order);
     }
-    this.logger.log(`Hydrated ${activeOrders.length} limit orders into the memory book.`);
+    this.logger.log(`Hydrated ${activeOrders.length} limit and stop orders into the memory book.`);
   }
 
   private getBook(stockId: string) {
     if (!this.books.has(stockId)) {
-      this.books.set(stockId, { bids: [], asks: [] });
+      this.books.set(stockId, { bids: [], asks: [], stopBids: [], stopAsks: [] });
     }
     return this.books.get(stockId)!;
   }
@@ -37,6 +37,15 @@ export class OrderBookService implements OnModuleInit {
     this.removeOrder(order.id, order.stockId, order.side);
     const book = this.getBook(order.stockId);
     
+    if (order.orderType === OrderType.STOP_LOSS) {
+      if (order.side === OrderSide.BUY) {
+        book.stopBids.push(order);
+      } else {
+        book.stopAsks.push(order);
+      }
+      return;
+    }
+
     if (order.side === OrderSide.BUY) {
       book.bids.push(order);
       // Sort bids: Price DESC, then Time ASC
@@ -60,8 +69,10 @@ export class OrderBookService implements OnModuleInit {
     const book = this.getBook(stockId);
     if (side === OrderSide.BUY) {
       book.bids = book.bids.filter(o => o.id !== orderId);
+      book.stopBids = book.stopBids.filter(o => o.id !== orderId);
     } else {
       book.asks = book.asks.filter(o => o.id !== orderId);
+      book.stopAsks = book.stopAsks.filter(o => o.id !== orderId);
     }
   }
 
@@ -102,6 +113,27 @@ export class OrderBookService implements OnModuleInit {
     const asks = aggregate(book.asks).slice(0, levels);
 
     return { bids, asks };
+  }
+
+  getTriggeredStopOrders(stockId: string, currentPrice: number): Order[] {
+    const book = this.getBook(stockId);
+    const triggered: Order[] = [];
+
+    // Buy Stop triggers if currentPrice >= stopPrice
+    for (const order of book.stopBids) {
+      if (currentPrice >= Number(order.price)) {
+        triggered.push(order);
+      }
+    }
+
+    // Sell Stop triggers if currentPrice <= stopPrice
+    for (const order of book.stopAsks) {
+      if (currentPrice <= Number(order.price)) {
+        triggered.push(order);
+      }
+    }
+
+    return triggered;
   }
 }
 

@@ -1,7 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, forwardRef, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { WebsocketGateway } from '../websocket/websocket.gateway';
 import { Interval } from '@nestjs/schedule';
+import { ExecutionService } from '../execution/execution.service';
 
 @Injectable()
 export class MarketsService {
@@ -10,6 +11,8 @@ export class MarketsService {
   constructor(
     private prisma: PrismaService,
     private wsGateway: WebsocketGateway,
+    @Inject(forwardRef(() => ExecutionService))
+    private executionService: ExecutionService,
   ) {}
 
   async getMarkets() {
@@ -112,6 +115,9 @@ export class MarketsService {
       });
 
       this.wsGateway.broadcastPriceUpdate(stock.symbol, newPrice);
+      
+      // Trigger any stop loss orders
+      await this.executionService.checkStopOrders(stock.id, newPrice);
     }
   }
 

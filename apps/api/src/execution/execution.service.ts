@@ -28,6 +28,17 @@ export class ExecutionService {
   async matchOrder(incomingOrder: Order): Promise<void> {
     this.logger.log(`Matching Engine received order ${incomingOrder.id}`);
 
+    // If it's a STOP_LOSS order, rest it immediately in the stop books.
+    if (incomingOrder.orderType === OrderType.STOP_LOSS) {
+      this.orderBookService.addOrder(incomingOrder);
+      // Immediately check if it should trigger based on the current market price
+      const stock = await this.prisma.stock.findUnique({ where: { id: incomingOrder.stockId } });
+      if (stock) {
+        await this.checkStopOrders(incomingOrder.stockId, Number(stock.currentPrice));
+      }
+      return;
+    }
+
     const originalIncomingFilledQuantity = incomingOrder.filledQuantity;
     let remainingQty = incomingOrder.quantity - incomingOrder.filledQuantity;
     if (remainingQty <= 0 || incomingOrder.status !== OrderStatus.OPEN) {
@@ -156,11 +167,25 @@ export class ExecutionService {
       return trades;
     });
 
-    // Notifications and WS broadcasts are now handled asynchronously by the Kafka Consumer
-
     if (createdTrades.length > 0) {
       const depth = this.orderBookService.getDepth(incomingOrder.stockId);
       this.wsGateway.broadcastOrderBook(incomingOrder.stockId, depth);
+    }
+  }
+
+  async checkStopOrders(stockId: string, currentPrice: number): Promise<void> {
+    const triggered = this.orderBookService.getTriggeredStopOrders(stockId, currentPrice);
+    for (const order of triggered) {
+      this.logger.log(`Stop order ${order.id} triggered at price ${currentPrice}`);
+      
+      // Remove from the stop book
+      this.orderBookService.removeOrder(order.id, stockId, order.side);
+      
+      // Temporarily treat it as a MARKET order in memory
+      order.orderType = OrderType.MARKET;
+      
+      // Match it recursively
+      await this.matchOrder(order);
     }
   }
 
@@ -172,7 +197,7 @@ export class ExecutionService {
   replaceRestingOrder(order: Order): void {
     this.orderBookService.removeOrder(order.id, order.stockId, order.side);
 
-    if (order.status === OrderStatus.OPEN && order.orderType === OrderType.LIMIT) {
+    if (order.status === OrderStatus.OPEN && (order.orderType === OrderType.LIMIT || order.orderType === OrderType.STOP_LOSS)) {
       this.orderBookService.addOrder(order);
     }
 
@@ -180,7 +205,7 @@ export class ExecutionService {
   }
 
   private hasPriceOverlap(incomingOrder: Order, bestMatch: Order): boolean {
-    if (incomingOrder.orderType === OrderType.MARKET) {
+    if (incomingOrder.orderType === OrderType.MARKET || incomingOrder.orderType === OrderType.STOP_LOSS) {
       return true;
     }
 
@@ -191,4 +216,5 @@ export class ExecutionService {
     return Number(incomingOrder.price) <= Number(bestMatch.price);
   }
 }
+
 
