@@ -18,7 +18,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = '/login';
+      // We removed the hard redirect so public pages can gracefully degrade to unauthenticated state.
+      // ProtectedRoute components will automatically redirect to /login when state.token becomes null.
     }
     return Promise.reject(error);
   }
