@@ -71,12 +71,12 @@ export function PnLTrend() {
           <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
             <XAxis dataKey="month" stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₹${value/1000}k`} />
+            <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value/1000}k`} />
             <Tooltip 
               contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }}
               labelStyle={{ color: '#94a3b8' }}
               itemStyle={{ color: '#34d399', fontWeight: 'bold' }}
-              formatter={(value: number) => [`₹${value.toLocaleString()}`, 'P&L']}
+              formatter={(value: number) => [`$${value.toLocaleString()}`, 'P&L']}
             />
             <Line type="monotone" dataKey="value" stroke="#34d399" strokeWidth={3} dot={{ r: 4, fill: '#34d399', strokeWidth: 2, stroke: '#1e293b' }} activeDot={{ r: 6 }} />
           </LineChart>

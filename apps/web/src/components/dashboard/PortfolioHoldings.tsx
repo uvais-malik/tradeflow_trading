@@ -35,10 +35,10 @@ export function PortfolioHoldings() {
                 <tr key={h.id} className="hover:bg-slate-700/30 cursor-pointer transition-colors">
                   <td className="py-2 font-bold text-slate-200">{h.stock?.symbol}</td>
                   <td className="py-2 text-slate-300">{h.quantity}</td>
-                  <td className="py-2 text-right font-mono text-slate-400">₹{avgPrice.toFixed(2)}</td>
-                  <td className="py-2 text-right font-mono text-white">₹{currentPrice.toFixed(2)}</td>
+                  <td className="py-2 text-right font-mono text-slate-400">${avgPrice.toFixed(2)}</td>
+                  <td className="py-2 text-right font-mono text-white">${currentPrice.toFixed(2)}</td>
                   <td className={`py-2 text-right font-mono font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {profit >= 0 ? '+' : '-'}₹{Math.abs(profit).toFixed(2)}
+                    {profit >= 0 ? '+' : '-'}${Math.abs(profit).toFixed(2)}
                   </td>
                 </tr>
               );

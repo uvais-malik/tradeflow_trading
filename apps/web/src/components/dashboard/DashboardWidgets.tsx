@@ -34,9 +34,9 @@ export function MarketOverview() {
 // 4. Watchlist
 export function Watchlist() {
   const list = [
-    { name: 'Apple', price: '₹180', change: '+3%', color: 'text-green-400' },
-    { name: 'Tesla', price: '₹250', change: '-2%', color: 'text-red-400' },
-    { name: 'Reliance', price: '₹2900', change: '+1%', color: 'text-green-400' },
+    { name: 'Apple', price: '$180', change: '+3%', color: 'text-green-400' },
+    { name: 'Tesla', price: '$250', change: '-2%', color: 'text-red-400' },
+    { name: 'Reliance', price: '$2900', change: '+1%', color: 'text-green-400' },
   ];
   return (
     <div className="glass-card p-5 h-full flex flex-col">
@@ -71,7 +71,7 @@ export function RiskSummary() {
         </div>
         <div>
           <p className="text-xs text-slate-500">Exposure</p>
-          <p className="text-sm font-bold text-slate-200 font-mono">₹8,20,000</p>
+          <p className="text-sm font-bold text-slate-200 font-mono">$8,20,000</p>
         </div>
         <div>
           <p className="text-xs text-slate-500">Largest Position</p>
@@ -354,9 +354,9 @@ export function PriceAlerts() {
     <div className="glass-card p-5 h-full flex flex-col">
       <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex-shrink-0">Price Alerts</h3>
       <div className="space-y-2 text-sm font-mono flex-1 overflow-y-auto pr-2">
-        <div className="flex items-center gap-2 text-slate-300"><span className="text-blue-400 font-bold">AAPL</span> {'>'} ₹190</div>
-        <div className="flex items-center gap-2 text-slate-300"><span className="text-rose-400 font-bold">TSLA</span> {'<'} ₹240</div>
-        <div className="flex items-center gap-2 text-slate-300"><span className="text-emerald-400 font-bold">RELIANCE</span> {'>'} ₹3000</div>
+        <div className="flex items-center gap-2 text-slate-300"><span className="text-blue-400 font-bold">AAPL</span> {'>'} $190</div>
+        <div className="flex items-center gap-2 text-slate-300"><span className="text-rose-400 font-bold">TSLA</span> {'<'} $240</div>
+        <div className="flex items-center gap-2 text-slate-300"><span className="text-emerald-400 font-bold">RELIANCE</span> {'>'} $3000</div>
       </div>
     </div>
   );

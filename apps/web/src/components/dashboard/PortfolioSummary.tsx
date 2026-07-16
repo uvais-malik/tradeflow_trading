@@ -7,7 +7,7 @@ interface PortfolioSummaryProps {
 
 export function PortfolioSummary({ summary, user }: PortfolioSummaryProps) {
   const formatMoney = (val: number | undefined) => 
-    val !== undefined ? `₹${Number(val).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '₹0.00';
+    val !== undefined ? `$${Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00';
 
   const pnl = summary?.totalUnrealizedPnL || 0;
   
@@ -28,7 +28,7 @@ export function PortfolioSummary({ summary, user }: PortfolioSummaryProps) {
         {/* Mocked fields below as requested */}
         <div>
           <p className="text-xs text-slate-500">Today's P&L</p>
-          <p className="text-lg font-bold text-emerald-400">+₹5,340.00</p>
+          <p className="text-lg font-bold text-emerald-400">+$5,340.00</p>
         </div>
         <div>
           <p className="text-xs text-slate-500">Overall P&L</p>
@@ -38,11 +38,11 @@ export function PortfolioSummary({ summary, user }: PortfolioSummaryProps) {
         </div>
         <div>
           <p className="text-xs text-slate-500">Buying Power</p>
-          <p className="text-sm font-bold text-slate-300">₹4,20,000.00</p>
+          <p className="text-sm font-bold text-slate-300">$4,20,000.00</p>
         </div>
         <div>
           <p className="text-xs text-slate-500">Margin Used</p>
-          <p className="text-sm font-bold text-slate-300">₹1,50,000.00</p>
+          <p className="text-sm font-bold text-slate-300">$1,50,000.00</p>
         </div>
       </div>
     </div>

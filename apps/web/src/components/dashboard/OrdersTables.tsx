@@ -41,7 +41,7 @@ export function OpenOrders() {
                 <td className="py-2 font-bold text-slate-200">{o.stock?.symbol || o.stockId}</td>
                 <td className={`py-2 font-bold ${o.side === 'BUY' ? 'text-green-400' : 'text-red-400'}`}>{o.side}</td>
                 <td className="py-2 text-slate-300">{o.quantity - o.filledQuantity}/{o.quantity}</td>
-                <td className="py-2 text-right font-mono text-white">₹{o.price ? Number(o.price).toFixed(2) : 'MKT'}</td>
+                <td className="py-2 text-right font-mono text-white">${o.price ? Number(o.price).toFixed(2) : 'MKT'}</td>
                 <td className="py-2 text-right">
                   <span className="text-[10px] font-bold px-2 py-1 bg-amber-500/20 text-amber-400 rounded-full">{o.status}</span>
                 </td>
@@ -85,7 +85,7 @@ export function RecentTrades() {
                   {e.order?.side === 'BUY' ? 'Bought' : 'Sold'}
                 </td>
                 <td className="py-2 text-slate-300">{e.quantity}</td>
-                <td className="py-2 text-right font-mono text-white">₹{Number(e.price).toFixed(2)}</td>
+                <td className="py-2 text-right font-mono text-white">${Number(e.price).toFixed(2)}</td>
                 <td className="py-2 text-right text-xs text-slate-500">
                   {new Date(e.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </td>

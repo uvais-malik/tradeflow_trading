@@ -39,7 +39,7 @@ export function MarketWatch() {
             {stocks.map(s => (
               <tr key={s.id} className="hover:bg-slate-700/30 transition-colors">
                 <td className="py-2 font-bold text-slate-200">{s.symbol}</td>
-                <td className="py-2 text-right font-mono text-white">₹{Number(s.currentPrice).toFixed(2)}</td>
+                <td className="py-2 text-right font-mono text-white">${Number(s.currentPrice).toFixed(2)}</td>
                 <td className="py-2 text-right font-bold text-green-400">▲1.4%</td>
                 <td className="py-2 text-right text-slate-400 font-mono">1.2M</td>
                 <td className="py-2 text-right">
