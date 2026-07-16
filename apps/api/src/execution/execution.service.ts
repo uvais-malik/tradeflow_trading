@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Order, OrderSide, OrderStatus, OrderType, Prisma, Trade } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { WebsocketGateway } from '../websocket/websocket.gateway';
 import { OrderBookService } from './order-book.service';
-import { NotificationsService } from '../notifications/notifications.service';
+import { ClientKafka } from '@nestjs/microservices';
 
 interface OrderUpdate {
   userId: string;
@@ -22,7 +22,7 @@ export class ExecutionService {
     private prisma: PrismaService,
     private wsGateway: WebsocketGateway,
     private orderBookService: OrderBookService,
-    private notificationsService: NotificationsService,
+    @Inject('KAFKA_CLIENT') private kafkaClient: ClientKafka,
   ) {}
 
   async matchOrder(incomingOrder: Order): Promise<void> {
@@ -123,20 +123,14 @@ export class ExecutionService {
         const trade = await tx.trade.create({ data: tradeInput });
         trades.push(trade);
 
-        await tx.auditLog.create({
-          data: {
-            actorId: null,
-            action: 'TRADE_EXECUTED',
-            entityType: 'TRADE',
-            entityId: trade.id,
-            metadata: {
-              buyOrderId: trade.buyOrderId,
-              sellOrderId: trade.sellOrderId,
-              stockId: trade.stockId,
-              price: Number(trade.price),
-              quantity: trade.quantity,
-            },
-          },
+        // Emit Kafka Event for async audit logging & notifications
+        this.kafkaClient.emit('trade.executed', {
+          tradeId: trade.id,
+          buyOrderId: trade.buyOrderId,
+          sellOrderId: trade.sellOrderId,
+          stockId: trade.stockId,
+          price: Number(trade.price),
+          quantity: trade.quantity,
         });
       }
 
@@ -150,46 +144,19 @@ export class ExecutionService {
           },
         });
 
-        await tx.auditLog.create({
-          data: {
-            actorId: data.userId,
-            action: 'ORDER_STATUS_CHANGED',
-            entityType: 'ORDER',
-            entityId: orderId,
-            metadata: {
-              status: data.status,
-              filledQuantity: data.filledQuantity,
-            },
-          },
+        // Emit Kafka Event for order status changes
+        this.kafkaClient.emit('order.status_changed', {
+          orderId,
+          userId: data.userId,
+          status: data.status,
+          filledQuantity: data.filledQuantity,
         });
       }
 
       return trades;
     });
 
-    for (const [orderId, data] of ordersToUpdate.entries()) {
-      this.wsGateway.broadcastOrderStatus(orderId, data.status);
-
-      if (data.status === OrderStatus.FILLED) {
-        await this.notificationsService.createForUser(
-          data.userId,
-          'ORDER_FILLED',
-          `Order ${orderId.substring(0, 8)} filled. Settlement is now pending.`,
-        );
-      } else if (data.status === OrderStatus.PARTIALLY_FILLED) {
-        await this.notificationsService.createForUser(
-          data.userId,
-          'ORDER_PARTIALLY_FILLED',
-          `Order ${orderId.substring(0, 8)} partially filled for ${data.filledQuantity} shares.`,
-        );
-      } else if (data.status === OrderStatus.CANCELLED) {
-        await this.notificationsService.createForUser(
-          data.userId,
-          'ORDER_CANCELLED',
-          `Market order ${orderId.substring(0, 8)} was cancelled because no matching liquidity was available.`,
-        );
-      }
-    }
+    // Notifications and WS broadcasts are now handled asynchronously by the Kafka Consumer
 
     if (createdTrades.length > 0) {
       const depth = this.orderBookService.getDepth(incomingOrder.stockId);

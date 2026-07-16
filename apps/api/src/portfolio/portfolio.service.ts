@@ -1,10 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Inject } from '@nestjs/common';
 import { Order, OrderSide, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class PortfolioService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   async getHoldings(userId: string) {
     return this.prisma.holding.findMany({
@@ -14,7 +19,26 @@ export class PortfolioService {
     });
   }
 
-  async getSummary(userId: string) {
+  async getSummary(userId: string): Promise<{
+    cash: number;
+    totalPortfolioValue: number;
+    totalAccountValue: number;
+    totalUnrealizedPnL: number;
+    totalRealizedPnL: number;
+  }> {
+    const cacheKey = `portfolio_summary_${userId}`;
+    const cachedSummary = await this.cacheManager.get<{
+      cash: number;
+      totalPortfolioValue: number;
+      totalAccountValue: number;
+      totalUnrealizedPnL: number;
+      totalRealizedPnL: number;
+    }>(cacheKey);
+    
+    if (cachedSummary) {
+      return cachedSummary;
+    }
+
     const [holdings, user] = await Promise.all([
       this.getHoldings(userId),
       this.prisma.user.findUnique({ where: { id: userId }, select: { walletBalance: true } }),
@@ -32,13 +56,18 @@ export class PortfolioService {
       totalUnrealizedPnL += (currentPrice - avgPrice) * quantity;
     }
 
-    return {
+    const result = {
       cash: Number(user?.walletBalance ?? 0),
       totalPortfolioValue,
       totalAccountValue: totalPortfolioValue + Number(user?.walletBalance ?? 0),
       totalUnrealizedPnL,
       totalRealizedPnL: 0,
     };
+
+    // Cache the result (TTL is globally configured to 30s)
+    await this.cacheManager.set(cacheKey, result);
+
+    return result;
   }
 
   async updateHoldingOnTrade(
